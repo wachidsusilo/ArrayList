@@ -23,9 +23,9 @@ void setup() {
     ArrayList<double> numberList;
 
     //Or create it with some initial values
+    numberList = {1.0, 2.0, 3.0, 4.0, 5.0};
 
     //Print elements of ArrayList to serial monitor
-    numberList = {1.0, 2.0, 3.0, 4.0, 5.0};
     Serial.println(">> ArrayList of double:");
     printArray(numberList);
 
