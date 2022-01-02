@@ -1,6 +1,10 @@
 #ifndef ARRAY_LIST_H
 #define ARRAY_LIST_H
 
+#if defined(ESP32) || defined(ESP8266)
+#include <functional>
+#endif
+
 #include "Arduino.h"
 
 template <typename T>
@@ -95,8 +99,12 @@ class ArrayList {
         }
     }
 
+#if defined(ESP32) || defined(ESP8266)
+    void removeIf(std::function<bool(T)> predicate) {
+#else
     template <typename Callable>
     void removeIf(Callable predicate) {
+#endif
         for (size_t i = 0; i < m_Size; i++) {
             if (predicate(m_Data[i])) {
                 removeByIndex(i);
@@ -112,8 +120,12 @@ class ArrayList {
         return false;
     }
 
+#if defined(ESP32) || defined(ESP8266)
+    bool contains(std::function<bool(T)> predicate) {
+#else
     template <typename Callable>
     bool contains(Callable predicate) {
+#endif
         for (size_t i = 0; i < m_Size; i++) {
             if (predicate(m_Data[i])) return true;
         }
@@ -127,8 +139,12 @@ class ArrayList {
         return -1;
     }
 
+#if defined(ESP32) || defined(ESP8266)
+    int indexOf(std::function<bool(T)> predicate) {
+#else
     template <typename Callable>
     int indexOf(Callable predicate) {
+#endif
         for (size_t i = 0; i < m_Size; i++) {
             if (predicate(m_Data[i])) return i;
         }
@@ -138,6 +154,16 @@ class ArrayList {
     void clear() {
         deallocate();
         reallocate(2);
+    }
+
+    const T& get(const size_t& index, const T& defVal) const {
+        if (index >= m_Size) return defVal;
+        return m_Data[index];
+    }
+
+    T& get(const size_t& index, const T& defVal) {
+        if (index >= m_Size) return const_cast<T&>(defVal);
+        return m_Data[index];
     }
 
     const T& operator[](const size_t& index) const {
@@ -163,15 +189,24 @@ class ArrayList {
         return *this;
     }
 
+#if defined(ESP32) || defined(ESP8266)
+    void forEach(std::function<bool(T&, size_t)> predicate) {
+#else
     template <typename Callable>
     void forEach(Callable predicate) {
+#endif
         for (size_t i = 0; i < m_Size; i++) {
             if (!predicate(m_Data[i], i)) break;
         }
     }
 
+#if defined(ESP32) || defined(ESP8266)
+    template <typename E = T>
+    ArrayList<E> map(std::function<E(T&, size_t)> predicate) {
+#else
     template <typename E = T, typename Callable>
     ArrayList<E> map(Callable predicate) {
+#endif
         ArrayList<E> buffer;
         for (size_t i = 0; i < m_Size; i++) {
             buffer.add(predicate(m_Data[i], i));
@@ -179,8 +214,12 @@ class ArrayList {
         return buffer;
     }
 
+#if defined(ESP32) || defined(ESP8266)
+    ArrayList filter(std::function<bool(T&)> predicate) {
+#else
     template <typename Callable>
     ArrayList filter(Callable predicate) {
+#endif
         ArrayList buffer;
         for (size_t i = 0; i < m_Size; i++) {
             if (predicate(m_Data[i])) buffer.add(m_Data[i]);
@@ -188,8 +227,12 @@ class ArrayList {
         return buffer;
     }
 
+#if defined(ESP32) || defined(ESP8266)
+    void sort(std::function<bool(T&, T&)> predicate) {
+#else
     template <typename Callable>
     void sort(Callable predicate) {
+#endif
         for (size_t i = 1; i < m_Size; i++) {
             for (size_t j = i; j > 0 && predicate(m_Data[j - 1], m_Data[j]); j--) {
                 T tmp = m_Data[j - 1];

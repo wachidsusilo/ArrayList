@@ -68,12 +68,12 @@ void setup() {
     //Find the index of number 35.23
     Serial.println("\n>> Find the index of number 35.23:");
     int idx = numberList.indexOf(35.23);
-    Serial.println(idx + String(" -> ") + numberList[idx]);
+    Serial.println(idx + String(" -> ") + numberList.get(idx, 0.0 /*default value*/));
 
     //If the number does not exist it will return -1
     Serial.println("\n>> Find the index of number 4.15:");
     idx = numberList.indexOf(4.15);
-    Serial.print(idx + String(" -> ") + numberList[idx]);
+    Serial.print(idx + String(" -> ") + numberList.get(idx, 0.0 /*default value*/));
     Serial.println(" (doesn't exist)");
 
     //Find the index of the first element which is greater than 10
@@ -131,7 +131,7 @@ void setup() {
     //Example of using map()
     //The old ArrayList would not be altered
     Serial.println("\n>> Example of using map(). Multiply each element by 2:");
-    ArrayList<double> newList = numberList.map([](double value, size_t index) -> double { return value * 2; });
+    ArrayList<double> newList = numberList.map<double>([](double value, size_t index) -> double { return value * 2; });
     printArray(newList);
 
     //Mapping to a new ArrayList with different type
