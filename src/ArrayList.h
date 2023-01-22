@@ -10,25 +10,73 @@
 template <typename T>
 class ArrayList {
    public:
-    class iterator {
+    class Iterator {
        public:
-        iterator(T* ptr) : ptr(ptr) {}
+        Iterator(T* ptr)
+            : m_Ptr(ptr) {}
 
-        iterator operator++() {
-            ++ptr;
+        Iterator operator++() {
+            ++m_Ptr;
             return *this;
         }
 
-        bool operator!=(const iterator& other) const {
-            return ptr != other.ptr;
+        Iterator operator++(int) {
+            Iterator tmp = *this;
+            ++m_Ptr;
+            return tmp;
         }
 
-        const T& operator*() const {
-            return *ptr;
+        Iterator operator--() {
+            --m_Ptr;
+            return *this;
+        }
+
+        Iterator operator--(int) {
+            Iterator tmp = *this;
+            --m_Ptr;
+            return tmp;
+        }
+
+        Iterator operator+(const int& n) {
+            return Iterator(m_Ptr + n);
+        }
+
+        Iterator operator-(const int& n) {
+            return Iterator(m_Ptr - n);
+        }
+
+        Iterator& operator+=(const int& n) {
+            m_Ptr += n;
+            return *this;
+        }
+
+        Iterator& operator-=(const int& n) {
+            m_Ptr -= n;
+            return *this;
+        }
+
+        bool operator==(const Iterator& other) {
+            return m_Ptr == other.m_Ptr;
+        }
+
+        bool operator!=(const Iterator& other) const {
+            return m_Ptr != other.m_Ptr;
+        }
+
+        T& operator[](const int& n) {
+            return *(m_Ptr + n);
+        }
+
+        T& operator*() const {
+            return *m_Ptr;
+        }
+
+        T* operator->() const {
+            return m_Ptr;
         }
 
        private:
-        T* ptr;
+        T* m_Ptr;
     };
 
     ArrayList()
@@ -254,12 +302,12 @@ class ArrayList {
         }
     }
 
-    iterator begin() const {
-        return iterator(m_Data);
+    Iterator begin() {
+        return Iterator(m_Data);
     }
 
-    iterator end() const {
-        return iterator(m_Data + m_Size);
+    Iterator end() {
+        return Iterator(m_Data + m_Size);
     }
 
     size_t size() {
