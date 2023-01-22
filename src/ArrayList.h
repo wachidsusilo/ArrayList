@@ -153,6 +153,10 @@ class ArrayList {
         return true;
     }
 
+    void resize(const size_t& newSize) {
+        _reallocate(newSize);
+    }
+
     void remove(const T& element) {
         removeAt(indexOf(element));
     }
