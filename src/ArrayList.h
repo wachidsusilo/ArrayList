@@ -142,6 +142,17 @@ class ArrayList {
         return true;
     }
 
+    bool addAll(const ArrayList& other) {
+        if (m_Size + other.m_Size >= m_Capacity) {
+            if (!_reallocate(m_Capacity + other.m_Capacity)) return false;
+        }
+        for (size_t i = 0; i < other.m_Size; i++) {
+            m_Data[m_Size + i] = other.m_Data[i];
+        }
+        m_Size += other.m_Size;
+        return true;
+    }
+
     void remove(const T& element) {
         removeAt(indexOf(element));
     }
